@@ -1,0 +1,122 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f4f7fa 0%, #e0e7ff 100%);
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding-top: 50px; /* Match thin navbar height */
+}
+
+.min-vh-100 {
+    min-height: 100vh;
+}
+
+.login-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 2rem auto;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.login-container h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1a2b49;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.btn-gradient {
+    background: linear-gradient(90deg, #007bff, #00ddeb);
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    width: 100%;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(90deg, #0056b3, #00a9c1);
+    transform: translateY(-2px);
+}
+
+.alert-danger {
+    border-radius: 8px;
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.75rem;
+}
+
+.text-primary {
+    color: #007bff !important;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.text-primary:hover {
+    color: #0056b3 !important;
+    text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+    .login-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .login-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .form-control {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-gradient {
+        padding: 0.65rem;
+        font-size: 0.95rem;
+    }
+}
