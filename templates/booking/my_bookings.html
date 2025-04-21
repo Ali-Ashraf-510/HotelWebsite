@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_bookings.css') }}">
+</head>
+<body>
+    {% include 'navbar/navbar.html' %}
+
+    <!-- Bookings Section -->
+    <div class="container my-5">
+        <h2>My Bookings</h2>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        {% if bookings %}
+        <div class="row">
+            {% for booking in bookings %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ booking.image_url }}" class="card-img-top" alt="{{ booking.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ booking.name }}</h5>
+                        <p><strong>Check-in:</strong> {{ booking.date_from }}</p>
+                        <p><strong>Check-out:</strong> {{ booking.date_to }}</p>
+                        <p><strong>Price per night:</strong> ${{ booking.price_per_night }}</p>
+                        <p><strong>Total Price:</strong> 
+                            {% set days = ((booking.date_to|datetime - booking.date_from|datetime).days) %}
+                            ${{ (days * booking.price_per_night)|round(2) }}
+                        </p>
+                        <form action="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Cancel Booking</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center">You have no bookings yet.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>

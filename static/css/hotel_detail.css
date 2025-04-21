@@ -1,0 +1,206 @@
+/* static/css/hotel_detail.css */
+.hotel-detail {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding-top: 80px; /* لتجنب تداخل الـ Navbar الثابت */
+}
+
+.hotel-detail .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.hotel-detail .alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.hotel-detail h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a2b49;
+    margin-bottom: 1.5rem;
+}
+
+.hotel-detail h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a2b49;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.hotel-detail .img-fluid {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-detail .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.hotel-detail .col-md-6 {
+    flex: 1;
+    min-width: 300px;
+}
+
+.hotel-detail p {
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.hotel-detail p strong {
+    color: #1a2b49;
+}
+
+.hotel-detail .form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1a2b49;
+    margin-bottom: 0.5rem;
+}
+
+.hotel-detail .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hotel-detail .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.hotel-detail .btn-primary {
+    background: linear-gradient(90deg, #007bff, #00ddeb);
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hotel-detail .btn-primary:hover {
+    background: linear-gradient(90deg, #0056b3, #00b7c3);
+    transform: scale(1.05);
+}
+
+.hotel-detail #total_price {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.hotel-detail .list-unstyled {
+    padding: 0;
+    margin: 0;
+}
+
+.hotel-detail .media {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-detail .media-body h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a2b49;
+    margin-bottom: 0.5rem;
+}
+
+.hotel-detail .media-body p {
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.hotel-detail textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+@media (max-width: 768px) {
+    .hotel-detail .container {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .hotel-detail h2 {
+        font-size: 1.75rem;
+    }
+
+    .hotel-detail h3 {
+        font-size: 1.35rem;
+    }
+
+    .hotel-detail .img-fluid {
+        height: 300px;
+    }
+
+    .hotel-detail .form-control {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
+    .hotel-detail .btn-primary {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        width: 100%;
+    }
+
+    .hotel-detail .media {
+        padding: 0.75rem;
+    }
+
+    .hotel-detail .media-body h5 {
+        font-size: 0.95rem;
+    }
+
+    .hotel-detail .media-body p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hotel-detail h2 {
+        font-size: 1.5rem;
+    }
+
+    .hotel-detail h3 {
+        font-size: 1.2rem;
+    }
+
+    .hotel-detail .img-fluid {
+        height: 250px;
+    }
+
+    .hotel-detail .col-md-6 {
+        min-width: 100%;
+    }
+
+    .hotel-detail .form-control {
+        font-size: 0.8rem;
+    }
+
+    .hotel-detail .btn-primary {
+        font-size: 0.85rem;
+    }
+}

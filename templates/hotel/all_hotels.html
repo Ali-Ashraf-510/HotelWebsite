@@ -2,45 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Hotels</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/all_hotels.css') }}">
-
 </head>
 <body>
-
     {% include 'navbar/navbar.html' %}
 
     <div class="container mt-5 pt-5">
         <h2 class="text-center mb-4">Find Your Hotel</h2>
 
-        <!-- ✅ Search form -->
-        <form class="search-box mb-5" method="get" action="{{ url_for('all_hotels') }}">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by hotel name..." value="{{ request.args.get('search', '') }}">
-                <button type="submit" class="btn btn-outline-primary"><i class="fas fa-search"></i></button>
+        <!-- Search Bar (Dynamic) -->
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search hotels by name or description...">
             </div>
-        </form>
+        </div>
 
+        <!-- Search Results -->
+        <div id="searchResults" class="row mb-4">
+            <div id="loading" style="display: none;" class="text-center">Loading...</div>
+        </div>
+
+        <!-- Hotels List -->
         <div class="row">
+            {% if hotels %}
             {% for hotel in hotels %}
-                <div class="col-md-4">
-                    <div class="card hotel-card">
-                        <img src="{{ hotel.image_url if hotel.image_url else 'https://via.placeholder.com/400x200' }}" class="card-img-top" alt="Hotel Image">
-                        <div class="card-body hotel-card-body">
-                            <h5 class="card-title hotel-name">{{ hotel.name }}</h5>
-                            <p class="card-text hotel-location">{{ hotel.location }}</p>
-                            <p class="card-text">{{ hotel.description }}</p>
-                            <p class="price">Price: ${{ hotel.price_per_night }}</p>
-                            <a href="#" class="btn btn-primary">Book Now</a>
-                        </div>
+            <div class="col-md-4 mb-4">
+                <div class="card hotel-card">
+                    <img src="{{ hotel.image_url if hotel.image_url else 'https://via.placeholder.com/400x200' }}" class="card-img-top" alt="{{ hotel.name }}">
+                    <div class="card-body hotel-card-body">
+                        <h5 class="card-title hotel-name">{{ hotel.name }}</h5>
+                        <p class="card-text hotel-location">{{ hotel.location }}</p>
+                        <p class="card-text">{{ hotel.description }}</p>
+                        <p class="price">Price: ${{ hotel.price_per_night }}</p>
+                        <a href="{{ url_for('hotel_detail', hotel_id=hotel.hotel_id) }}" class="btn btn-primary">Book Now</a>
                     </div>
                 </div>
+            </div>
             {% endfor %}
+            {% else %}
+            <p class="text-center">No hotels found.</p>
+            {% endif %}
         </div>
-        
     </div>
 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- JavaScript for Live Search -->
+    <script>
+        $(document).ready(function() {
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            const searchHotels = debounce(function(keyword) {
+                $.ajax({
+                    url: "{{ url_for('search') }}",
+                    data: { keyword: keyword },
+                    type: 'GET',
+                    beforeSend: function() {
+                        $('#loading').show();
+                    },
+                    success: function(data) {
+                        $('#loading').hide();
+                        $('#searchResults').empty();
+                        if (data.length > 0) {
+                            $.each(data, function(index, hotel) {
+                                var hotelHtml = `
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card hotel-card">
+                                            <img src="${hotel.image_url || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${hotel.name}">
+                                            <div class="card-body hotel-card-body">
+                                                <h5 class="card-title hotel-name">${hotel.name}</h5>
+                                                <p class="card-text hotel-location">${hotel.location}</p>
+                                                <p class="card-text">${hotel.description}</p>
+                                                <p class="price">Price: $${hotel.price_per_night}</p>
+                                                <a href="{{ url_for('hotel_detail', hotel_id=0) }}".replace('0', hotel.hotel_id) class="btn btn-primary">Book Now</a>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                                $('#searchResults').append(hotelHtml);
+                            });
+                        } else {
+                            $('#searchResults').html('<p class="text-center">No hotels found.</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#loading').hide();
+                        $('#searchResults').html('<p class="text-center">Error occurred while searching.</p>');
+                    }
+                });
+            }, 300);
+
+            $('#searchInput').on('input', function() {
+                var keyword = $(this).val();
+                if (keyword.length > 0) {
+                    searchHotels(keyword);
+                } else {
+                    $('#searchResults').empty();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
