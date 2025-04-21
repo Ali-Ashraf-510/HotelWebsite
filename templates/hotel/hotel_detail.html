@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ hotel.name }} - Hotel Details</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hotel_detail.css') }}">
 </head>
-<body>
+<body class="hotel-detail">
     {% include 'navbar/navbar.html' %}
 
     <!-- Hotel Details Section -->
@@ -24,9 +24,13 @@
             </div>
             <div class="col-md-6">
                 <h2>{{ hotel.name }}</h2>
+                <p><strong>Star Rating:</strong> {{ hotel.star_rating }} ★</p>
+                <p><strong>Average Rating:</strong> {{ hotel.average_rating }} / 5</p>
                 <p><strong>Location:</strong> {{ hotel.location }}</p>
                 <p><strong>Description:</strong> {{ hotel.description }}</p>
-                <p><strong>Price per night:</strong> ${{ hotel.price_per_night }}</p>
+                <p><strong>Price per night:</strong> $<span id="price_per_night" data-price="{{ hotel.price_per_night }}">{{ hotel.price_per_night }}</span></p>
+                <p><strong>Amenities:</strong> {{ hotel.amenities or 'None' }}</p>
+                <p><strong>Total Rooms:</strong> {{ hotel.total_rooms }}</p>
                 <form action="{{ url_for('book_hotel', hotel_id=hotel.hotel_id) }}" method="POST">
                     <div class="mb-3">
                         <label for="date_from" class="form-label">Check-in Date</label>
@@ -35,6 +39,10 @@
                     <div class="mb-3">
                         <label for="date_to" class="form-label">Check-out Date</label>
                         <input type="date" class="form-control" id="date_to" name="date_to" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="number_of_guests" class="form-label">Number of Guests</label>
+                        <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" min="1" value="1" required>
                     </div>
                     <div class="mb-3">
                         <p><strong>Total Price:</strong> <span id="total_price">$0</span></p>
@@ -52,7 +60,7 @@
                 {% for review in reviews %}
                 <li class="media mb-4">
                     <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{ review.full_name }}</h5>
+                        <h5 class="mt-0 mb-1">{{ review.full_name }} (Rating: {{ review.rating }}/5)</h5>
                         <p>{{ review.content }}</p>
                     </div>
                 </li>
@@ -67,6 +75,10 @@
             <h4>Write a Review</h4>
             <form action="{{ url_for('add_review', hotel_id=hotel.hotel_id) }}" method="POST">
                 <div class="mb-3">
+                    <label for="rating" class="form-label">Rating (1-5)</label>
+                    <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="5" required>
+                </div>
+                <div class="mb-3">
                     <textarea class="form-control" id="review" name="review" rows="4" placeholder="Write your review..." required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit Review</button>
@@ -78,8 +90,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <!-- JavaScript for Total Price -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('date_from').addEventListener('change', calculateTotalPrice);
         document.getElementById('date_to').addEventListener('change', calculateTotalPrice);
@@ -87,7 +98,8 @@
         function calculateTotalPrice() {
             const dateFrom = new Date(document.getElementById('date_from').value);
             const dateTo = new Date(document.getElementById('date_to').value);
-            const pricePerNight = {{ hotel.price_per_night }};
+            const pricePerNightElement = document.getElementById('price_per_night');
+            const pricePerNight = parseFloat(pricePerNightElement.getAttribute('data-price')) || 0;
             const totalPriceElement = document.getElementById('total_price');
 
             if (dateFrom && dateTo && dateTo > dateFrom) {

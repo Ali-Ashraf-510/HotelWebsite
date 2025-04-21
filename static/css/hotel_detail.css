@@ -203,4 +203,13 @@
     .hotel-detail .btn-primary {
         font-size: 0.85rem;
     }
+
+    .hotel-detail p.star-rating {
+        color: #f1c40f; /* لون النجوم */
+        font-size: 1rem;
+    }
+    .hotel-detail p.average-rating {
+        color: #2ecc71; /* لون التقييم */
+        font-weight: 500;
+    }
 }

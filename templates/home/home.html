@@ -1,232 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>All Hotels</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
 <body>
-  {% include 'navbar/navbar.html' %}
-  <section class="hero-section d-flex align-items-center">
-    <div id="particles-js"></div>
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="hero-heading animate-text">Book Your Perfect <span class="highlight">Hotel</span> with <span class="highlight">Ease</span></h1>
-                <p class="mt-4 animate-text">Discover luxurious stays, budget-friendly rooms, and everything in between for your next trip.</p>
-                <a href="{{ url_for('all_hotels') }}">
-                    <button class="btn-lg-custom mt-3">Explore All Hotels</button>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="container mt-5">
-  <h1 class="text-center mb-4">Welcome to Hotel Booking</h1>
-  <div class="row">
-    {% for hotel in hotels %}
-        <div class="col-md-4">
-            <div class="card hotel-card">
-                <img src="{{ hotel.image_url or 'https://via.placeholder.com/400x200' }}" class="card-img-top" alt="Hotel Image">
-                <div class="card-body hotel-card-body">
-                    <h5 class="card-title hotel-name">{{ hotel.name }}</h5>
-                    <p class="card-text hotel-location">{{ hotel.location }}</p>
-                    <p class="card-text">{{ hotel.description }}</p>
-                    <p class="price">Price: ${{ hotel.price_per_night }}</p>
-                    <a href="#" class="btn btn-primary">Book Now</a>
+    {% include 'navbar/navbar.html' %}
+
+    <!-- Hero Section -->
+    <section class="hero-section d-flex align-items-center">
+        <div id="particles-js"></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-heading animate-text">Book Your Perfect <span class="highlight">Hotel</span> with <span class="highlight">Ease</span></h1>
+                    <p class="mt-4 animate-text">Discover luxurious stays, budget-friendly rooms, and everything in between for your next trip.</p>
+                    <a href="{{ url_for('all_hotels') }}">
+                        <button class="btn-lg-custom mt-3">Explore All Hotels</button>
+                    </a>
                 </div>
             </div>
         </div>
-    {% endfor %}
-</div>
+    </section>
 
-</div>
+    <!-- Featured Hotels Section -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Welcome to Hotel Booking</h1>
+        <div class="row">
+            {% if hotels %}
+            {% for hotel in hotels %}
+            <div class="col-md-4 mb-4">
+                <div class="card hotel-card">
+                    <img src="{{ hotel.image_url or 'https://via.placeholder.com/400x200' }}" class="card-img-top" alt="{{ hotel.name }}">
+                    <div class="card-body hotel-card-body">
+                        <h5 class="card-title hotel-name">{{ hotel.name }}</h5>
+                        <p class="card-text"><strong>Star Rating:</strong> {{ hotel.star_rating }} ★</p>
+                        <p class="card-text"><strong>Average Rating:</strong> {{ hotel.average_rating }} / 5</p>
+                        <p class="card-text hotel-location">{{ hotel.location }}</p>
+                        <p class="card-text">{{ hotel.description }}</p>
+                        <p class="card-text"><strong>Amenities:</strong> {{ hotel.amenities or 'None' }}</p>
+                        <p class="price">Price: ${{ hotel.price_per_night }}</p>
+                        <a href="{{ url_for('hotel_detail', hotel_id=hotel.hotel_id) }}" class="btn btn-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-center">No featured hotels available.</p>
+            {% endif %}
+        </div>
+    </div>
 
-    
     <!-- Services Section -->
     <section class="services-section bg-light">
-      <div class="container">
-          <div class="section-header text-center">
-              <h2>Our <span class="highlight">Services</span></h2>
-              <p class="section-subtitle">Everything you need for a perfect stay</p>
-          </div>
-          <div class="row mt-5">
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-search"></i>
-                      </div>
-                      <h4>Easy Search & Booking</h4>
-                      <p>Find your ideal hotel with our advanced search filters. Sort by price, rating, amenities, and location to discover accommodations that perfectly match your preferences.</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-percent"></i>
-                      </div>
-                      <h4>Best Price Guarantee</h4>
-                      <p>We guarantee the lowest rates on all bookings. Found a better price elsewhere? We'll match it and give you an additional 10% discount on your reservation.</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-medal"></i>
-                      </div>
-                      <h4>Verified Reviews</h4>
-                      <p>Make informed decisions with authentic reviews from verified guests. Our transparent rating system ensures you know exactly what to expect from your chosen hotel.</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-clipboard-check"></i>
-                      </div>
-                      <h4>Flexible Cancellation</h4>
-                      <p>Plans change? No problem. Enjoy peace of mind with our flexible cancellation policies on most bookings, allowing you to modify or cancel your reservation if needed.</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-headset"></i>
-                      </div>
-                      <h4>24/7 Customer Support</h4>
-                      <p>Our dedicated support team is available around the clock to assist with any questions or concerns before, during, or after your stay. We're always here to help.</p>
-                  </div>
-              </div>
-              <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="service-card">
-                      <div class="icon-box">
-                          <i class="fas fa-gift"></i>
-                      </div>
-                      <h4>Loyalty Rewards</h4>
-                      <p>Earn points with every booking and unlock exclusive benefits, discounts, and free nights. Our loyalty program rewards you for choosing our platform for your travels.</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Our <span class="highlight">Services</span></h2>
+                <p class="section-subtitle">Everything you need for a perfect stay</p>
+            </div>
+            <div class="row mt-5">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h4>Easy Search & Booking</h4>
+                        <p>Find your ideal hotel with our advanced search filters. Sort by price, rating, amenities, and location to discover accommodations that perfectly match your preferences.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                        <h4>Best Price Guarantee</h4>
+                        <p>We guarantee the lowest rates on all bookings. Found a better price elsewhere? We'll match it and give you an additional 10% discount on your reservation.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <h4>Verified Reviews</h4>
+                        <p>Make informed decisions with authentic reviews from verified guests. Our transparent rating system ensures you know exactly what to expect from your chosen hotel.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-clipboard-check"></i>
+                        </div>
+                        <h4>Flexible Cancellation</h4>
+                        <p>Plans change? No problem. Enjoy peace of mind with our flexible cancellation policies on most bookings, allowing you to modify or cancel your reservation if needed.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4>24/7 Customer Support</h4>
+                        <p>Our dedicated support team is available around the clock to assist with any questions or concerns before, during, or after your stay. We're always here to help.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="service-card">
+                        <div class="icon-box">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h4>Loyalty Rewards</h4>
+                        <p>Earn points with every booking and unlock exclusive benefits, discounts, and free nights. Our loyalty program rewards you for choosing our platform for your travels.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Features Section -->
-  <section class="features-section">
-      <div class="container">
-          <div class="section-header text-center">
-              <h2>Why Choose <span class="highlight">Us</span></h2>
-              <p class="section-subtitle">Features that make us stand out</p>
-          </div>
-          <div class="row align-items-center mt-5">
-              <div class="col-lg-6">
-                  <div class="features-img">
-                      <img src="../../static/images/home2.jpg" alt="Features" class="img-fluid rounded shadow">
-                  </div>
-              </div>
-              <div class="col-lg-6">
-                  <div class="features-list">
-                      <div class="feature-item">
-                          <div class="feature-icon">
-                              <i class="fas fa-globe"></i>
-                          </div>
-                          <div class="feature-content">
-                              <h4>Global Selection</h4>
-                              <p>Access to over 500,000 hotels worldwide, from luxury resorts to boutique guesthouses in 190+ countries.</p>
-                          </div>
-                      </div>
-                      <div class="feature-item">
-                          <div class="feature-icon">
-                              <i class="fas fa-mobile-alt"></i>
-                          </div>
-                          <div class="feature-content">
-                              <h4>Mobile Friendly</h4>
-                              <p>Book on the go with our responsive mobile app. Access your bookings, check in details, and get directions with ease.</p>
-                          </div>
-                      </div>
-                      <div class="feature-item">
-                          <div class="feature-icon">
-                              <i class="fas fa-shield-alt"></i>
-                          </div>
-                          <div class="feature-content">
-                              <h4>Secure Payments</h4>
-                              <p>Industry-leading encryption and security protocols ensure your payment information is always protected.</p>
-                          </div>
-                      </div>
-                      <div class="feature-item">
-                          <div class="feature-icon">
-                              <i class="fas fa-credit-card"></i>
-                          </div>
-                          <div class="feature-content">
-                              <h4>No Hidden Fees</h4>
-                              <p>Transparent pricing with all applicable taxes and fees clearly displayed before you complete your booking.</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Why Choose <span class="highlight">Us</span></h2>
+                <p class="section-subtitle">Features that make us stand out</p>
+            </div>
+            <div class="row align-items-center mt-5">
+                <div class="col-lg-6">
+                    <div class="features-img">
+                        <img src="{{ url_for('static', filename='images/home2.jpg') }}" alt="Features" class="img-fluid rounded shadow">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Global Selection</h4>
+                                <p>Access to over 500,000 hotels worldwide, from luxury resorts to boutique guesthouses in 190+ countries.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Mobile Friendly</h4>
+                                <p>Book on the go with our responsive mobile app. Access your bookings, check in details, and get directions with ease.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>Secure Payments</h4>
+                                <p>Industry-leading encryption and security protocols ensure your payment information is always protected.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="feature-content">
+                                <h4>No Hidden Fees</h4>
+                                <p>Transparent pricing with all applicable taxes and fees clearly displayed before you complete your booking.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <footer class="footer bg-dark text-white pt-5 pb-4">
-      <div class="container">
-          <div class="row">
-              <!-- About Us Section -->
-              <div class="col-md-4">
-                  <h5>About Us</h5>
-                  <p class="about-text">We make booking your perfect hotel effortless. Explore a wide range of accommodations, from luxury resorts to budget-friendly stays, tailored to your travel needs.</p>
-              </div>
-              
-              <!-- Quick Links Section -->
-              <div class="col-md-2">
-                  <h5>Quick Links</h5>
-                  <ul class="list-unstyled contact-info">
-                      <li><a routerLink="/home" class="text-white hov">Home</a></li>
-                      <li><a routerLink="/allhotels" class="text-white">Hotels</a></li>
-                      <li><a routerLink="/contactus" class="text-white">Contact Us</a></li>
-                      <li><a routerLink="/aboutus" class="text-white">About Us</a></li>
-                  </ul>
-              </div>
-              
-              <!-- Contact Info Section -->
-              <div class="col-md-3">
-                  <h5>Contact Info</h5>
-                  <ul class="list-unstyled contact-info">
-                      <li><i class="fas fa-map-marker-alt"></i> 456 Travel Avenue, Hospitality City</li>
-                      <li><i class="fas fa-phone"></i> +1 234 567 8901</li>
-                      <li><i class="fas fa-envelope"></i> supporthotelstay.com</li>
-                  </ul>
-              </div>
-  
-              <!-- Social Media Section -->
-              <div class="col-md-3">
-                  <h5>Follow Us</h5>
-                  <div class="social-links">
-                      <a href="#" class="text-white mr-3"><i class="fab fa-facebook-f"></i></a>
-                      <a href="#" class="text-white mr-3"><i class="fab fa-twitter"></i></a>
-                      <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
-                      <a href="#" class="text-white"><i class="fab fa-linkedin"></i></a>
-                  </div>
-              </div>
-          </div>
-  
-          <hr class="bg-light">
-          
-          <!-- Copyright and Privacy Policy -->
-          <div class="row text-center">
-              <div class="col-md-12">
-                  <p class="mb-0">© 2025 HotelStay. All rights reserved. <a href="#" class="text-white">Privacy Policy</a></p>
-              </div>
-          </div>
-      </div>
-  </footer>
- 
-</body>
+    <!-- Footer Section -->
+    <footer class="footer bg-dark text-white pt-5 pb-4">
+        <div class="container">
+            <div class="row">
+                <!-- About Us Section -->
+                <div class="col-md-4">
+                    <h5>About Us</h5>
+                    <p class="about-text">We make booking your perfect hotel effortless. Explore a wide range of accommodations, from luxury resorts to budget-friendly stays, tailored to your travel needs.</p>
+                </div>
+                
+                <!-- Quick Links Section -->
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled contact-info">
+                        <li><a href="{{ url_for('home') }}" class="text-white hov">Home</a></li>
+                        <li><a href="{{ url_for('all_hotels') }}" class="text-white">Hotels</a></li>
+                        <li><a href="#" class="text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-white">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info Section -->
+                <div class="col-md-3">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> 456 Travel Avenue, Hospitality City</li>
+                        <li><i class="fas fa-phone"></i> +1 234 567 8901</li>
+                        <li><i class="fas fa-envelope"></i> support@hotelstay.com</li>
+                    </ul>
+                </div>
+    
+                <!-- Social Media Section -->
+                <div class="col-md-3">
+                    <h5>Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+    
+            <hr class="bg-light">
+            
+            <!-- Copyright and Privacy Policy -->
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <p class="mb-0">© 2025 HotelStay. All rights reserved. <a href="#" class="text-white">Privacy Policy</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- إذا كنت تستخدم particles.js، تحتاج إلى تضمين المكتبة -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        // تهيئة particles.js إذا كنت تستخدمه
+        if (document.getElementById('particles-js')) {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+    </script>
 </body>
 </html>
