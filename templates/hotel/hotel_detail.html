@@ -3,91 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ hotel.name }} - Hotel Details</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>{{ hotel.name }} - Hotel Details | HotelHub</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hotel_detail.css') }}">
 </head>
 <body class="hotel-detail">
+    <!-- Navbar -->
     {% include 'navbar/navbar.html' %}
+
+    <!-- Hero Section -->
+    <div class="hero-section" style="background-image: url('{{ hotel.image_url }}');">
+        <div class="hero-overlay">
+            <div class="container">
+                <h1 class="hero-title">{{ hotel.name }}</h1>
+                <p class="hero-subtitle"><i class="fas fa-map-marker-alt"></i> {{ hotel.location }}</p>
+                <div class="hero-rating">
+                    <span class="star-rating">
+                        {% for i in range(hotel.star_rating) %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% for i in range(5 - hotel.star_rating) %}
+                        <i class="far fa-star"></i>
+                        {% endfor %}
+                    </span>
+                    <span class="average-rating">({{ hotel.average_rating|default('0', true) }}/5)</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Hotel Details Section -->
     <div class="container my-5">
         {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endif %}
         <div class="row">
-            <div class="col-md-6">
-                <img src="{{ hotel.image_url }}" class="img-fluid" alt="{{ hotel.name }}">
+            <!-- Hotel Details -->
+            <div class="col-md-7">
+                <div class="hotel-info-card">
+                    <h3 class="section-title">About This Hotel</h3>
+                    <p class="hotel-description">{{ hotel.description }}</p>
+                    <div class="hotel-details">
+                        <p><i class="fas fa-money-bill-wave"></i> <strong>Price per Night:</strong> $<span id="price_per_night" data-price="{{ hotel.price_per_night }}">{{ hotel.price_per_night }}</span></p>
+                        <p><i class="fas fa-concierge-bell"></i> <strong>Amenities:</strong> {{ hotel.amenities or 'None' }}</p>
+                        <p><i class="fas fa-bed"></i> <strong>Total Rooms:</strong> {{ hotel.total_rooms }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <h2>{{ hotel.name }}</h2>
-                <p><strong>Star Rating:</strong> {{ hotel.star_rating }} ★</p>
-                <p><strong>Average Rating:</strong> {{ hotel.average_rating }} / 5</p>
-                <p><strong>Location:</strong> {{ hotel.location }}</p>
-                <p><strong>Description:</strong> {{ hotel.description }}</p>
-                <p><strong>Price per night:</strong> $<span id="price_per_night" data-price="{{ hotel.price_per_night }}">{{ hotel.price_per_night }}</span></p>
-                <p><strong>Amenities:</strong> {{ hotel.amenities or 'None' }}</p>
-                <p><strong>Total Rooms:</strong> {{ hotel.total_rooms }}</p>
-                <form action="{{ url_for('book_hotel', hotel_id=hotel.hotel_id) }}" method="POST">
-                    <div class="mb-3">
-                        <label for="date_from" class="form-label">Check-in Date</label>
-                        <input type="date" class="form-control" id="date_from" name="date_from" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="date_to" class="form-label">Check-out Date</label>
-                        <input type="date" class="form-control" id="date_to" name="date_to" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="number_of_guests" class="form-label">Number of Guests</label>
-                        <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" min="1" value="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <p><strong>Total Price:</strong> <span id="total_price">$0</span></p>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Book Now</button>
-                </form>
+            <!-- Booking Form -->
+            <div class="col-md-5">
+                <div class="booking-form-card">
+                    <h3 class="section-title">Book Your Stay</h3>
+                    <form action="{{ url_for('book_hotel', hotel_id=hotel.hotel_id) }}" method="POST">
+                        <div class="mb-3">
+                            <label for="date_from" class="form-label">Check-in Date</label>
+                            <input type="date" class="form-control" id="date_from" name="date_from" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date_to" class="form-label">Check-out Date</label>
+                            <input type="date" class="form-control" id="date_to" name="date_to" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="number_of_guests" class="form-label">Number of Guests</label>
+                            <input type="number" class="form-control" id="number_of_guests" name="number_of_guests" min="1" value="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <p><i class="fas fa-wallet"></i> <strong>Total Price:</strong> <span id="total_price">$0</span></p>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <!-- Reviews Section -->
-        <div class="mt-5">
-            <h3>Reviews</h3>
+        <div class="mt-5 reviews-section">
+            <h3 class="section-title">Guest Reviews</h3>
             {% if reviews %}
-            <ul class="list-unstyled">
+            <div class="row">
                 {% for review in reviews %}
-                <li class="media mb-4">
-                    <div class="media-body">
-                        <h5 class="mt-0 mb-1">{{ review.full_name }} (Rating: {{ review.rating }}/5)</h5>
-                        <p>{{ review.content }}</p>
+                <div class="col-md-6 mb-4">
+                    <div class="review-card" id="review-{{ review.review_id }}">
+                        <div class="review-header">
+                            <h5 class="reviewer-name">{{ review.full_name }}</h5>
+                            <span class="review-rating">
+                                {% for i in range(review.rating) %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+                                {% for i in range(5 - review.rating) %}
+                                <i class="far fa-star"></i>
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <p class="review-content" id="review-content-{{ review.review_id }}">{{ review.content }}</p>
+                        {% if 'user_id' in session and session.user_id == review.user_id %}
+                        <div class="review-actions mt-2">
+                            <button class="btn btn-sm btn-warning me-2" onclick="showEditForm('{{ review.review_id }}', '{{ review.content|escape }}', '{{ review.rating }}')">Edit</button>
+                            <form action="{{ url_for('delete_review', hotel_id=hotel.hotel_id, review_id=review.review_id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                            </form>
+                        </div>
+                        <!-- Edit Review Form (Hidden by Default) -->
+                        <div class="edit-review-form mt-3" id="edit-form-{{ review.review_id }}" style="display:none;">
+                            <form action="{{ url_for('edit_review', hotel_id=hotel.hotel_id, review_id=review.review_id) }}" method="POST">
+                                <div class="mb-3">
+                                    <label for="edit-rating-{{ review.review_id }}" class="form-label">Rating (1-5)</label>
+                                    <input type="number" class="form-control" id="edit-rating-{{ review.review_id }}" name="rating" min="1" max="5" value="{{ review.rating }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="edit-review-{{ review.review_id }}" name="review" rows="3" required>{{ review.content }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-sm btn-secondary ms-2" onclick="hideEditForm('{{ review.review_id }}')">Cancel</button>
+                            </form>
+                        </div>
+                        {% endif %}
                     </div>
-                </li>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
             {% else %}
-            <p>No reviews yet.</p>
+            <div class="empty-state text-center">
+                <i class="fas fa-comment-slash fa-3x mb-3 text-muted"></i>
+                <p class="lead">No reviews yet. Be the first to share your experience!</p>
+            </div>
             {% endif %}
 
             <!-- Add a Review Form -->
             {% if 'user_id' in session %}
-            <h4>Write a Review</h4>
-            <form action="{{ url_for('add_review', hotel_id=hotel.hotel_id) }}" method="POST">
-                <div class="mb-3">
-                    <label for="rating" class="form-label">Rating (1-5)</label>
-                    <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="5" required>
-                </div>
-                <div class="mb-3">
-                    <textarea class="form-control" id="review" name="review" rows="4" placeholder="Write your review..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit Review</button>
-            </form>
+            <div class="review-form-card mt-5">
+                <h4 class="section-title">Write a Review</h4>
+                <form action="{{ url_for('add_review', hotel_id=hotel.hotel_id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating (1-5)</label>
+                        <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" value="5" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="review" name="review" rows="4" placeholder="Share your experience..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
             {% else %}
-            <p>Please <a href="{{ url_for('login') }}">login</a> to write a review.</p>
+            <div class="text-center mt-4">
+                <p>Please <a href="{{ url_for('login') }}" class="text-primary">login</a> to write a review.</p>
+            </div>
             {% endif %}
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p>© 2025 HotelHub. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -110,6 +190,17 @@
             } else {
                 totalPriceElement.textContent = '$0';
             }
+        }
+
+        // Functions to show/hide the edit review form
+        function showEditForm(reviewId, content, rating) {
+            document.getElementById(`edit-form-${reviewId}`).style.display = 'block';
+            document.getElementById(`review-content-${reviewId}`).style.display = 'none';
+        }
+
+        function hideEditForm(reviewId) {
+            document.getElementById(`edit-form-${reviewId}`).style.display = 'none';
+            document.getElementById(`review-content-${reviewId}`).style.display = 'block';
         }
     </script>
 </body>

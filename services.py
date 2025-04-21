@@ -114,10 +114,10 @@ def add_review_for_hotel(cursor, user_id, hotel_id, review_text, rating):
 def get_reviews_for_hotel(cursor, hotel_id):
     try:
         query = """
-            SELECT R.content, R.rating, U.full_name
+            SELECT R.review_id, R.user_id, R.content, R.rating, U.full_name
             FROM Reviews R
             JOIN Users U ON R.user_id = U.user_id
-            WHERE R.hotel_id = ? AND R.is_approved = 1;
+            WHERE R.hotel_id = ?;
         """
         cursor.execute(query, (hotel_id,))
         columns = [col[0] for col in cursor.description]
@@ -125,7 +125,6 @@ def get_reviews_for_hotel(cursor, hotel_id):
     except Exception as e:
         logging.error(f"Error fetching reviews for hotel {hotel_id}: {e}")
         return []
-
 # بحث عن فنادق بالاسم أو الوصف
 def search_hotels(cursor, keyword):
     try:
@@ -192,3 +191,53 @@ def get_user_bookings(cursor, user_id):
         logging.error(f"Error fetching bookings for user {user_id}: {e}")
         return []
     
+def delete_review_for_hotel(cursor, review_id, user_id):
+    try:
+        query = """
+            DELETE FROM Reviews
+            WHERE review_id = ? AND user_id = ?;
+        """
+        cursor.execute(query, (review_id, user_id))
+        if cursor.rowcount == 0:
+            raise ValueError("Review not found or you do not have permission to delete it")
+
+        # تحديث متوسط التقييم بعد الحذف
+        query_avg = """
+            UPDATE Hotels
+            SET average_rating = (
+                SELECT AVG(CAST(rating AS FLOAT))
+                FROM Reviews
+                WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?)
+            )
+            WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?);
+        """
+        cursor.execute(query_avg, (review_id, review_id))
+    except Exception as e:
+        logging.error(f"Error deleting review {review_id}: {e}")
+        raise
+
+def edit_review_for_hotel(cursor, review_id, user_id, review_text, rating):
+    try:
+        query = """
+            UPDATE Reviews
+            SET content = ?, rating = ?
+            WHERE review_id = ? AND user_id = ?;
+        """
+        cursor.execute(query, (review_text, rating, review_id, user_id))
+        if cursor.rowcount == 0:
+            raise ValueError("Review not found or you do not have permission to edit it")
+
+        # تحديث متوسط التقييم بعد التعديل
+        query_avg = """
+            UPDATE Hotels
+            SET average_rating = (
+                SELECT AVG(CAST(rating AS FLOAT))
+                FROM Reviews
+                WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?)
+            )
+            WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?);
+        """
+        cursor.execute(query_avg, (review_id, review_id))
+    except Exception as e:
+        logging.error(f"Error editing review {review_id}: {e}")
+        raise

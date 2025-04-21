@@ -123,15 +123,14 @@ def add_review_for_hotel(cursor, user_id, hotel_id, review_text, rating):
 
 def get_reviews_for_hotel(cursor, hotel_id):
     query = """
-        SELECT R.content, R.rating, U.full_name
+        SELECT R.review_id, R.user_id, R.content, R.rating, U.full_name
         FROM Reviews R
         JOIN Users U ON R.user_id = U.user_id
-        WHERE R.hotel_id = ? AND R.is_approved = 1;
+        WHERE R.hotel_id = ?;
     """
     cursor.execute(query, (hotel_id,))
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
-
 def search_hotels(cursor, keyword):
     query = """
         SELECT 
@@ -354,7 +353,91 @@ def get_all_amenities(cursor):
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+def delete_review_for_hotel(cursor, review_id, user_id):
+    query = """
+        DELETE FROM Reviews
+        WHERE review_id = ? AND user_id = ?;
+    """
+    cursor.execute(query, (review_id, user_id))
+    if cursor.rowcount == 0:
+        raise ValueError("Review not found or you do not have permission to delete it")
 
+    # تحديث متوسط التقييم بعد الحذف
+    query_avg = """
+        UPDATE Hotels
+        SET average_rating = (
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM Reviews
+            WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?)
+        )
+        WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?);
+    """
+    cursor.execute(query_avg, (review_id, review_id))
+
+def edit_review_for_hotel(cursor, review_id, user_id, review_text, rating):
+    query = """
+        UPDATE Reviews
+        SET content = ?, rating = ?
+        WHERE review_id = ? AND user_id = ?;
+    """
+    cursor.execute(query, (review_text, rating, review_id, user_id))
+    if cursor.rowcount == 0:
+        raise ValueError("Review not found or you do not have permission to edit it")
+
+    # تحديث متوسط التقييم بعد التعديل
+    query_avg = """
+        UPDATE Hotels
+        SET average_rating = (
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM Reviews
+            WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?)
+        )
+        WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?);
+    """
+    cursor.execute(query_avg, (review_id, review_id))
+@app.route("/review/<int:hotel_id>/delete/<int:review_id>", methods=["POST"])
+def delete_review(hotel_id, review_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    try:
+        delete_review_for_hotel(cursor, review_id, user_id)
+        conn.commit()
+        return redirect(url_for("hotel_detail", hotel_id=hotel_id))
+    except ValueError as e:
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error=str(e))
+    except Exception as e:
+        logging.error(f"Delete review error: {e}")
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error="An error occurred while deleting the review")
+
+@app.route("/review/<int:hotel_id>/edit/<int:review_id>", methods=["POST"])
+def edit_review(hotel_id, review_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    content = request.form["review"]
+    rating = int(request.form.get("rating", 5))
+    try:
+        edit_review_for_hotel(cursor, review_id, user_id, content, rating)
+        conn.commit()
+        return redirect(url_for("hotel_detail", hotel_id=hotel_id))
+    except ValueError as e:
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error=str(e))
+    except Exception as e:
+        logging.error(f"Edit review error: {e}")
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error="An error occurred while editing the review")
 # ---------- App Run ----------
 if __name__ == "__main__":
     app.run(debug=True)

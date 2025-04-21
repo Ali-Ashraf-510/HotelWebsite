@@ -3,39 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bookings</title>
+    <title>My Bookings - HotelHub</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/my_bookings.css') }}">
 </head>
 <body class="my-bookings">
+    <!-- Navbar -->
     {% include 'navbar/navbar.html' %}
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">My Bookings</h1>
+            <p class="hero-subtitle">View and manage your hotel reservations</p>
+        </div>
+    </div>
 
     <!-- Bookings Section -->
     <div class="container my-5">
-        <h2>My Bookings</h2>
         {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         {% endif %}
         {% if bookings %}
         <div class="row">
             {% for booking in bookings %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ booking.image_url }}" class="card-img-top" alt="{{ booking.name }}">
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="booking-card">
+                    <div class="booking-image-wrapper">
+                        <img src="{{ booking.image_url }}" class="card-img-top" alt="{{ booking.name }}">
+                        <div class="status-overlay {{ 'status-confirmed' if booking.status == 'Confirmed' else 'status-cancelled' }}">
+                            {{ booking.status }}
+                        </div>
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ booking.name }}</h5>
-                        <p><strong>Check-in:</strong> {{ booking.date_from }}</p>
-                        <p><strong>Check-out:</strong> {{ booking.date_to }}</p>
-                        <p><strong>Price per night:</strong> ${{ booking.price_per_night }}</p>
-                        <p><strong>Total Price:</strong> ${{ booking.total_price }}</p>
-                        <p><strong>Number of Guests:</strong> {{ booking.number_of_guests }}</p>
-                        <p><strong>Status:</strong> {{ booking.status }}</p>
+                        <p class="booking-detail"><i class="fas fa-calendar-check"></i> <strong>Check-in:</strong> {{ booking.date_from }}</p>
+                        <p class="booking-detail"><i class="fas fa-calendar-times"></i> <strong>Check-out:</strong> {{ booking.date_to }}</p>
+                        <p class="booking-detail"><i class="fas fa-money-bill-wave"></i> <strong>Price per Night:</strong> ${{ booking.price_per_night }}</p>
+                        <p class="booking-detail"><i class="fas fa-wallet"></i> <strong>Total Price:</strong> ${{ booking.total_price }}</p>
+                        <p class="booking-detail"><i class="fas fa-users"></i> <strong>Guests:</strong> {{ booking.number_of_guests }}</p>
                         {% if booking.status != 'Cancelled' %}
                         <form action="{{ url_for('cancel_booking', booking_id=booking.booking_id) }}" method="POST">
-                            <button type="submit" class="btn btn-danger">Cancel Booking</button>
+                            <button type="submit" class="btn btn-danger btn-sm w-100 mt-2">Cancel Booking</button>
                         </form>
                         {% endif %}
                     </div>
@@ -44,10 +63,16 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-center">You have no bookings yet.</p>
+        <div class="empty-state text-center">
+            <i class="fas fa-hotel fa-3x mb-3 text-muted"></i>
+            <p class="lead">You have no bookings yet.</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary">Explore Hotels</a>
+        </div>
         {% endif %}
     </div>
 
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

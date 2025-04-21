@@ -1,157 +1,151 @@
 /* static/css/my_bookings.css */
-.my-bookings {
+
+/* General Styles */
+body.my-bookings {
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding-top: 80px; /* لتجنب تداخل الـ Navbar الثابت */
+    background-color: #f5f7fa;
+    color: #333;
 }
 
-.my-bookings .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-}
-
-.my-bookings h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #1a2b49;
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #007bff 0%, #00ddeb 100%);
+    color: white;
+    padding: 60px 0;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 40px;
 }
 
-.my-bookings .alert-danger {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-size: 0.95rem;
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
-.my-bookings .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
+.hero-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    opacity: 0.9;
 }
 
-.my-bookings .card {
+/* Booking Card */
+.booking-card {
     background: #fff;
-    border: none;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    max-width: 350px;
 }
 
-.my-bookings .card:hover {
+.booking-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.my-bookings .card-img-top {
-    width: 100%;
+.booking-image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-img-top {
     height: 200px;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-.my-bookings .card-body {
-    padding: 1.5rem;
-}
-
-.my-bookings .card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1a2b49;
-    margin-bottom: 0.75rem;
-}
-
-.my-bookings .card-body p {
-    font-size: 0.9rem;
-    color: #4a5568;
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-.my-bookings .card-body p strong {
-    color: #1a2b49;
-}
-
-.my-bookings .btn-danger {
-    background: linear-gradient(90deg, #dc3545, #e4606d);
-    border: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.my-bookings .btn-danger:hover {
-    background: linear-gradient(90deg, #c82333, #d44f5c);
+.booking-card:hover .card-img-top {
     transform: scale(1.05);
 }
 
-.my-bookings .text-center {
-    text-align: center;
-    font-size: 1rem;
-    color: #4a5568;
-    margin-top: 2rem;
+.status-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
 }
 
+.status-confirmed {
+    background-color: #28a745;
+}
+
+.status-cancelled {
+    background-color: #dc3545;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.booking-detail {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.booking-detail i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 50px 0;
+}
+
+.empty-state .lead {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.empty-state .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.empty-state .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .my-bookings .container {
-        padding: 1.5rem 0.75rem;
+    .hero-title {
+        font-size: 2rem;
     }
 
-    .my-bookings h2 {
-        font-size: 1.75rem;
+    .hero-subtitle {
+        font-size: 1rem;
     }
 
-    .my-bookings .card {
-        max-width: 100%;
+    .booking-card {
+        margin-bottom: 20px;
     }
 
-    .my-bookings .card-img-top {
-        height: 180px;
-    }
-
-    .my-bookings .card-title {
-        font-size: 1.15rem;
-    }
-
-    .my-bookings .card-body p {
-        font-size: 0.85rem;
-    }
-
-    .my-bookings .btn-danger {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .my-bookings h2 {
-        font-size: 1.5rem;
-    }
-
-    .my-bookings .card-img-top {
-        height: 160px;
-    }
-
-    .my-bookings .card-body {
-        padding: 1rem;
-    }
-
-    .my-bookings .card-title {
-        font-size: 1.1rem;
-    }
-
-    .my-bookings .btn-danger {
-        width: 100%;
-        text-align: center;
+    .card-img-top {
+        height: 150px;
     }
 }

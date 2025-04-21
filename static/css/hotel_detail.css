@@ -1,215 +1,285 @@
 /* static/css/hotel_detail.css */
-.hotel-detail {
+
+/* General Styles */
+body.hotel-detail {
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
-    padding-top: 80px; /* لتجنب تداخل الـ Navbar الثابت */
+    background-color: #f5f7fa;
+    color: #333;
 }
 
-.hotel-detail .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-}
-
-.hotel-detail .alert-danger {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-size: 0.95rem;
-}
-
-.hotel-detail h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #1a2b49;
-    margin-bottom: 1.5rem;
-}
-
-.hotel-detail h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1a2b49;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-
-.hotel-detail .img-fluid {
-    width: 100%;
+/* Hero Section */
+.hero-section {
+    position: relative;
     height: 400px;
-    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 40px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #fff;
+    opacity: 0.9;
+}
+
+.hero-subtitle i {
+    margin-right: 8px;
+}
+
+.hero-rating {
+    margin-top: 10px;
+}
+
+.star-rating i {
+    color: #ffd700;
+    font-size: 1.2rem;
+}
+
+.average-rating {
+    color: #fff;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+/* Hotel Info Card */
+.hotel-info-card {
+    background: #fff;
     border-radius: 12px;
+    padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.hotel-detail .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-}
-
-.hotel-detail .col-md-6 {
-    flex: 1;
-    min-width: 300px;
-}
-
-.hotel-detail p {
-    font-size: 0.95rem;
-    color: #4a5568;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-}
-
-.hotel-detail p strong {
-    color: #1a2b49;
-}
-
-.hotel-detail .form-label {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #1a2b49;
-    margin-bottom: 0.5rem;
-}
-
-.hotel-detail .form-control {
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hotel-detail .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-.hotel-detail .btn-primary {
-    background: linear-gradient(90deg, #007bff, #00ddeb);
-    border: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.hotel-detail .btn-primary:hover {
-    background: linear-gradient(90deg, #0056b3, #00b7c3);
-    transform: scale(1.05);
-}
-
-.hotel-detail #total_price {
-    color: #007bff;
+.section-title {
+    font-size: 1.8rem;
     font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
 }
 
-.hotel-detail .list-unstyled {
-    padding: 0;
-    margin: 0;
-}
-
-.hotel-detail .media {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.hotel-detail .media-body h5 {
+.hotel-description {
     font-size: 1rem;
-    font-weight: 600;
-    color: #1a2b49;
-    margin-bottom: 0.5rem;
+    color: #555;
+    margin-bottom: 20px;
 }
 
-.hotel-detail .media-body p {
+.hotel-details p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.hotel-details i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+/* Booking Form Card */
+.booking-form-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Reviews Section */
+.reviews-section {
+    margin-bottom: 40px;
+}
+
+.review-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reviewer-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.review-rating i {
+    color: #ffd700;
     font-size: 0.9rem;
-    color: #4a5568;
 }
 
-.hotel-detail textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
+.review-content {
+    font-size: 0.95rem;
+    color: #555;
 }
 
+/* Empty State */
+.empty-state {
+    padding: 50px 0;
+}
+
+.empty-state .lead {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Review Form Card */
+.review-form-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+textarea.form-control {
+    resize: none;
+}
+
+/* Footer */
+.footer-section {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.footer-section p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+
+/* Review Actions */
+.review-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Edit Review Form */
+.edit-review-form {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.edit-review-form .form-control {
+    border-radius: 6px;
+}
+
+.edit-review-form .btn-primary {
+    padding: 8px 15px;
+}
+
+.edit-review-form .btn-secondary {
+    padding: 8px 15px;
+    background-color: #6c757d;
+    border: none;
+}
+
+.edit-review-form .btn-secondary:hover {
+    background-color: #5a6268;
+}
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-    .hotel-detail .container {
-        padding: 1.5rem 0.75rem;
-    }
-
-    .hotel-detail h2 {
-        font-size: 1.75rem;
-    }
-
-    .hotel-detail h3 {
-        font-size: 1.35rem;
-    }
-
-    .hotel-detail .img-fluid {
+    .hero-section {
         height: 300px;
     }
 
-    .hotel-detail .form-control {
-        font-size: 0.85rem;
-        padding: 0.6rem;
+    .hero-title {
+        font-size: 2rem;
     }
 
-    .hotel-detail .btn-primary {
-        font-size: 0.9rem;
-        padding: 0.6rem 1.2rem;
-        width: 100%;
-    }
-
-    .hotel-detail .media {
-        padding: 0.75rem;
-    }
-
-    .hotel-detail .media-body h5 {
-        font-size: 0.95rem;
-    }
-
-    .hotel-detail .media-body p {
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .hotel-detail h2 {
-        font-size: 1.5rem;
-    }
-
-    .hotel-detail h3 {
-        font-size: 1.2rem;
-    }
-
-    .hotel-detail .img-fluid {
-        height: 250px;
-    }
-
-    .hotel-detail .col-md-6 {
-        min-width: 100%;
-    }
-
-    .hotel-detail .form-control {
-        font-size: 0.8rem;
-    }
-
-    .hotel-detail .btn-primary {
-        font-size: 0.85rem;
-    }
-
-    .hotel-detail p.star-rating {
-        color: #f1c40f; /* لون النجوم */
+    .hero-subtitle {
         font-size: 1rem;
     }
-    .hotel-detail p.average-rating {
-        color: #2ecc71; /* لون التقييم */
-        font-weight: 500;
+
+    .booking-form-card {
+        position: static;
+        margin-top: 20px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
     }
 }
