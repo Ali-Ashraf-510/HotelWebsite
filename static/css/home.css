@@ -1,10 +1,24 @@
 /* static/css/home.css */
+:root {
+    --primary: #1e40af;
+    --primary-dark: #1e3a8a;
+    --secondary: #22d3ee;
+    --background: #f8fafc;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --card-hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s ease;
+}
+
 .hero-section {
     position: relative;
     min-height: 100vh;
-    background: linear-gradient(90deg, #007bff, #00ddeb);
-    color: #fff;
+    background: url('../images/hero-bg.jpg') no-repeat center center/cover; /* Add a high-quality hotel image */
+    color: #ffffff;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
 }
 
 .hero-overlay {
@@ -13,40 +27,169 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.7), rgba(34, 211, 238, 0.4));
+    z-index: 1;
+}
+
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 1;
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
+    text-align: left;
+    animation: fadeInUp 1s ease-out;
 }
 
 .hero-heading {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subheading {
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 2rem;
+    opacity: 0.9;
 }
 
 .highlight {
-    color: #00ddeb;
+    color: var(--secondary);
+    font-weight: 700;
 }
 
-.btn-lg-custom {
-    background: linear-gradient(90deg, #007bff, #00ddeb);
+.btn-gradient {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
     border: none;
-    padding: 12px 24px;
-    color: #fff;
-    border-radius: 25px;
+    padding: 1rem 2.5rem;
+    color: #ffffff;
+    border-radius: 50px;
+    font-size: 1.1 defe;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(90deg, var(--primary-dark), #0ea5e9);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(30, 64, 175, 0.4);
+}
+
+.btn-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.btn-gradient:hover::after {
+    left: 100%;
+}
+
+.btn-outline-light {
+    padding: 1rem 2.5rem;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: var(--transition);
 }
 
-.btn-lg-custom:hover {
-    background: linear-gradient(90deg, #0056b3, #00a9c1);
-    transform: translateY(-2px);
+.btn-outline-light:hover {
+    background: var(--secondary);
+    color: #ffffff;
+    border-color: var(--secondary);
+    transform: translateY(-3px);
 }
 
+.animate-text {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-text.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.animate-text.delay-2 {
+    animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-heading {
+        font-size: 3.5rem;
+    }
+
+    .hero-subheading {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-heading {
+        font-size: 2.5rem;
+    }
+
+    .hero-subheading {
+        font-size: 1rem;
+    }
+
+    .btn-gradient, .btn-outline-light {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+
+    .hero-cta .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .hero-cta .ms-3 {
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-heading {
+        font-size: 2rem;
+    }
+
+    .hero-subheading {
+        font-size: 0.95rem;
+    }
+}
+
+/* Existing styles for other sections (unchanged, included for context) */
 .services-section, .features-section {
     padding: 4rem 0;
 }
@@ -66,17 +209,18 @@
     background: #fff;
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
 }
 
 .service-card:hover, .feature-item:hover {
     transform: translateY(-5px);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .icon-box, .feature-icon {
     font-size: 2rem;
-    color: #007bff;
+    color: var(--primary);
     margin-bottom: 1rem;
 }
 
@@ -87,19 +231,4 @@
 .contact-info li, .social-links a {
     margin-bottom: 0.5rem;
     color: #e0e0e0;
-}
-
-@media (max-width: 768px) {
-    .hero-heading {
-        font-size: 2rem;
-    }
-
-    .btn-lg-custom {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-
-    .section-header h2 {
-        font-size: 2rem;
-    }
 }

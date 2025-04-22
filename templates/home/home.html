@@ -13,22 +13,32 @@
 <body>
     {% include 'navbar/navbar.html' %}
 
-    <!-- Hero Section -->
-    <section class="hero-section d-flex align-items-center">
-        <div id="particles-js"></div>
-        <div class="hero-overlay"></div>
-        <div class="container hero-content">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="hero-heading animate-text">Book Your Perfect <span class="highlight">Hotel</span> with <span class="highlight">Ease</span></h1>
-                    <p class="mt-4 animate-text">Discover luxurious stays, budget-friendly rooms, and everything in between for your next trip.</p>
-                    <a href="{{ url_for('all_hotels') }}">
-                        <button class="btn-lg-custom mt-3">Explore All Hotels</button>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div id="particles-js"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content d-flex align-items-center">
+        <div class="row align-items-center">
+            <div class="col-lg-7 col-md-8">
+                <h1 class="hero-heading animate-text">
+                    Discover Your <span class="highlight">Perfect Stay</span> with <span class="highlight">LuxeStay</span>
+                </h1>
+                <p class="hero-subheading animate-text delay-1">
+                    Explore a world of luxurious hotels, cozy retreats, and budget-friendly stays tailored to your travel dreams.
+                </p>
+                <div class="hero-cta animate-text delay-2">
+                    <a href="{{ url_for('all_hotels') }}" class="btn btn-gradient">
+                        Explore Hotels Now
+                    </a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light ms-3">
+                        Join Us
                     </a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 
     <!-- Featured Hotels Section -->
     <div class="container mt-5">
@@ -238,66 +248,24 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <!-- إذا كنت تستخدم particles.js، تحتاج إلى تضمين المكتبة -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // تهيئة particles.js إذا كنت تستخدمه
         if (document.getElementById('particles-js')) {
             particlesJS('particles-js', {
                 "particles": {
-                    "number": {
-                        "value": 80,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#ffffff"
-                    },
-                    "shape": {
-                        "type": "circle",
-                        "stroke": {
-                            "width": 0,
-                            "color": "#000000"
-                        }
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": false
-                    },
-                    "size": {
-                        "value": 3,
-                        "random": true
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#ffffff",
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 6,
-                        "direction": "none",
-                        "random": false,
-                        "straight": false,
-                        "out_mode": "out",
-                        "bounce": false
-                    }
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 1000 } },
+                    "color": { "value": "#ffffff" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.4, "random": true },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.3, "width": 1 },
+                    "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
                 },
                 "interactivity": {
                     "detect_on": "canvas",
                     "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "repulse"
-                        },
-                        "onclick": {
-                            "enable": true,
-                            "mode": "push"
-                        },
+                        "onhover": { "enable": true, "mode": "repulse" },
+                        "onclick": { "enable": true, "mode": "push" },
                         "resize": true
                     }
                 },
