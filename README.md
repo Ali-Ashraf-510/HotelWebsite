@@ -34,23 +34,34 @@
 
 ## 🗂 Project Structure
 
-hotelhub/ │ 
-   ├── app.py # Main Flask application 
-   ├── requirements.txt # List of Python dependencies 
-   ├── services.py # Helper functions (e.g., DB connection) │ 
-   ├── static/ # Static assets │ 
-      ├── css/ │ │
-         ├── navbar.css │ │ 
-         ├── hotel_detail.css │ 
-         │ └── my_bookings.css │
-      ├── js/ │
-      └── images/ │
-   ├── templates/ # HTML templates │ 
-   ├── navbar/ │ 
-      │ └── navbar.html │
-   ├── hotel/ │ │
-      └── hotel_detail.html │ 
-         ├── my_bookings.html │ ├── home.html │ ├── login.html │ └── register.html │ ├── SQL queries/ # SQL scripts for DB setup (optional) ├── .gitignore # Files to ignore in Git └── README.md # Project documentation
+hotelhub/
+│
+├── app.py                 # Main Flask application
+├── requirements.txt       # List of Python dependencies
+├── services.py            # Helper functions (e.g., DB connection)
+│
+├── static/                # Static assets
+│   ├── css/
+│   │   ├── navbar.css
+│   │   ├── hotel_detail.css
+│   │   └── my_bookings.css
+│   ├── js/
+│   └── images/
+│
+├── templates/             # HTML templates
+│   ├── navbar/
+│   │   └── navbar.html
+│   ├── hotel/
+│   │   └── hotel_detail.html
+│   ├── my_bookings.html
+│   ├── home.html
+│   ├── login.html
+│   └── register.html
+│
+├── SQL queries/           # SQL scripts for DB setup (optional)
+├── .gitignore             # Files to ignore in Git
+└── README.md              # Project documentation
+
 
 
 ---
