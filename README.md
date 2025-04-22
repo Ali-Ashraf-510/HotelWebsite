@@ -84,7 +84,7 @@ Follow these steps to run the project locally:
 
 ```bash
 git clone https://github.com/your-username/hotelhub.git
-cd hotelhub
+cd HotelWebsite
 ```
 ### 2. Create a Virtual Environment
 
