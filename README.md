@@ -91,11 +91,23 @@ cd HotelWebsite
    - Windows
      - python -m venv venv
      - venv\Scripts\activate
+   - if you see an error like
+     ```
+     venv\Scripts\activate.ps1 cannot be loaded because running scripts is disabled on this system
+
+     
+    - ✅ Solution:
+
+    Open PowerShell as Administrator
+    Run the following command:
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    .\venv\Scripts\Activate
+   ```
 
   -  macOS/Linux
       -python3 -m venv venv
       -source venv/bin/activate
-
+   
 ### 3. Install Dependencies
 - pip install -r requirements.txt
 
