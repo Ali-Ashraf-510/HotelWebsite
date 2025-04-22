@@ -95,14 +95,17 @@ cd HotelWebsite
      ```
      venv\Scripts\activate.ps1 cannot be loaded because running scripts is disabled on this system
 
-     
-    - ✅ Solution:
+     ```
+   - ✅ Solution:
 
-    Open PowerShell as Administrator
-    Run the following command:
+     - Open PowerShell as Administrator
+     - Run the following command:
+     ```
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-    .\venv\Scripts\Activate
-   ```
+    ```
+    ```
+     \venv\Scripts\Activate
+    ```
 
   -  macOS/Linux
       -python3 -m venv venv
