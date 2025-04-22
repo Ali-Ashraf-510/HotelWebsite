@@ -3,149 +3,262 @@
 /* General Styles */
 body.my-bookings {
     font-family: 'Poppins', sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    background-color: #f8fafc;
+    color: #2d3748;
+    margin: 0;
+    padding: 0;
 }
 
 /* Hero Section */
 .hero-section {
-    background: linear-gradient(135deg, #007bff 0%, #00ddeb 100%);
+    background: linear-gradient(135deg, #1a73e8 0%, #34c4f2 100%);
     color: white;
-    padding: 60px 0;
+    padding: 80px 0;
     text-align: center;
-    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/subtle-white-feathers.png');
+    opacity: 0.1;
 }
 
 .hero-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 300;
     opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+.hero-icon {
+    margin-top: 20px;
+}
+
+.hero-icon i {
+    color: #ffffff;
+    opacity: 0.8;
 }
 
 /* Booking Card */
 .booking-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
 .booking-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
 .booking-image-wrapper {
     position: relative;
     overflow: hidden;
+    border-bottom: 3px solid #1a73e8;
 }
 
 .card-img-top {
-    height: 200px;
+    height: 220px;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
 }
 
 .booking-card:hover .card-img-top {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .status-overlay {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 5px 10px;
-    border-radius: 12px;
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    border-radius: 20px;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .status-confirmed {
-    background-color: #28a745;
+    background-color: #2ecc71;
 }
 
 .status-cancelled {
-    background-color: #dc3545;
+    background-color: #e74c3c;
 }
 
 .card-body {
-    padding: 20px;
+    padding: 25px;
+    background: linear-gradient(145deg, #ffffff, #f7f9fc);
 }
 
 .card-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 15px;
-    color: #2c3e50;
+    margin-bottom: 20px;
+    color: #1a202c;
+    position: relative;
+}
+
+.card-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: #1a73e8;
+    border-radius: 2px;
 }
 
 .booking-detail {
     font-size: 0.95rem;
-    margin-bottom: 10px;
-    color: #555;
+    margin-bottom: 12px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
 }
 
 .booking-detail i {
-    margin-right: 8px;
-    color: #007bff;
+    margin-right: 10px;
+    color: #1a73e8;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.booking-detail:hover i {
+    color: #34c4f2;
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     border: none;
-    transition: background-color 0.3s ease;
+    padding: 10px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
 }
 
 /* Empty State */
 .empty-state {
-    padding: 50px 0;
+    padding: 80px 0;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    color: #a0aec0;
+    transition: color 0.3s ease;
+}
+
+.empty-state:hover i {
+    color: #1a73e8;
 }
 
 .empty-state .lead {
-    font-size: 1.2rem;
-    color: #666;
+    font-size: 1.3rem;
+    color: #718096;
+    margin-bottom: 20px;
 }
 
 .empty-state .btn-primary {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #1a73e8 0%, #34c4f2 100%);
     border: none;
-    padding: 10px 20px;
+    padding: 12px 30px;
     font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .empty-state .btn-primary:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #34c4f2 0%, #1a73e8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.3);
 }
-
-
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 0;
+    }
+
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 
     .hero-subtitle {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .booking-card {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
     }
 
     .card-img-top {
-        height: 150px;
+        height: 180px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .empty-state {
+        padding: 60px 0;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+    }
+
+    .empty-state .lead {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .card-img-top {
+        height: 160px;
+    }
+
+    .booking-detail {
+        font-size: 0.9rem;
     }
 }

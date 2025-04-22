@@ -47,6 +47,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endif %}
+        {% if success %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ success }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
         <div class="row">
             <!-- Hotel Details -->
             <div class="col-md-7">
@@ -60,11 +66,11 @@
                     </div>
                 </div>
             </div>
-            <!-- Booking Form -->
+            <!-- Booking and Payment Form -->
             <div class="col-md-5">
                 <div class="booking-form-card">
                     <h3 class="section-title">Book Your Stay</h3>
-                    <form action="{{ url_for('book_hotel', hotel_id=hotel.hotel_id) }}" method="POST">
+                    <form id="booking-form" action="{{ url_for('book_hotel', hotel_id=hotel.hotel_id) }}" method="POST">
                         <div class="mb-3">
                             <label for="date_from" class="form-label">Check-in Date</label>
                             <input type="date" class="form-control" id="date_from" name="date_from" required>
@@ -79,8 +85,27 @@
                         </div>
                         <div class="mb-3">
                             <p><i class="fas fa-wallet"></i> <strong>Total Price:</strong> <span id="total_price">$0</span></p>
+                            <input type="hidden" id="total_price_input" name="total_price" value="0">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                        <!-- Payment Section -->
+                        <div class="payment-section">
+                            <h4 class="section-title">Payment Details (Simulation)</h4>
+                            <div class="mb-3">
+                                <label for="card_number" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiry_date" class="form-label">Expiry Date (MM/YY)</label>
+                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY" maxlength="5" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" maxlength="3" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Book and Pay</button>
                     </form>
                 </div>
             </div>
@@ -181,14 +206,17 @@
             const pricePerNightElement = document.getElementById('price_per_night');
             const pricePerNight = parseFloat(pricePerNightElement.getAttribute('data-price')) || 0;
             const totalPriceElement = document.getElementById('total_price');
+            const totalPriceInput = document.getElementById('total_price_input');
 
             if (dateFrom && dateTo && dateTo > dateFrom) {
                 const timeDiff = dateTo - dateFrom;
                 const days = timeDiff / (1000 * 60 * 60 * 24);
                 const totalPrice = days * pricePerNight;
                 totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
+                totalPriceInput.value = totalPrice.toFixed(2);
             } else {
                 totalPriceElement.textContent = '$0';
+                totalPriceInput.value = 0;
             }
         }
 
@@ -202,6 +230,27 @@
             document.getElementById(`edit-form-${reviewId}`).style.display = 'none';
             document.getElementById(`review-content-${reviewId}`).style.display = 'block';
         }
+
+        // Format Card Number (Add spaces every 4 digits)
+        document.getElementById('card_number').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // Format Expiry Date (Add slash after MM)
+        document.getElementById('expiry_date').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+
+        // Restrict CVV to numbers only
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
     </script>
 </body>
 </html>

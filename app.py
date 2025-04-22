@@ -98,16 +98,7 @@ def login_user(cursor, email, password):
         return user
     return None
 
-def book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of_guests):
-    hotel = get_hotel_by_id(cursor, hotel_id)
-    if not hotel:
-        raise ValueError("Hotel not found")
-
-    date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-    date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-    days = (date_to_dt - date_from_dt).days
-    total_price = days * hotel['price_per_night']
-
+def book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of_guests, total_price):
     query = """
         INSERT INTO Bookings (user_id, hotel_id, date_from, date_to, total_price, status, number_of_guests)
         VALUES (?, ?, ?, ?, ?, 'Confirmed', ?);
@@ -115,11 +106,24 @@ def book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of
     cursor.execute(query, (user_id, hotel_id, date_from, date_to, total_price, number_of_guests))
 
 def add_review_for_hotel(cursor, user_id, hotel_id, review_text, rating):
+    # إضافة المراجعة
     query = """
         INSERT INTO Reviews (user_id, hotel_id, content, rating)
         VALUES (?, ?, ?, ?);
     """
     cursor.execute(query, (user_id, hotel_id, review_text, rating))
+
+    # حساب متوسط التقييم وتحديث جدول Hotels
+    query_avg = """
+        UPDATE Hotels
+        SET average_rating = (
+            SELECT AVG(CAST(rating AS FLOAT))
+            FROM Reviews
+            WHERE hotel_id = ?
+        )
+        WHERE hotel_id = ?;
+    """
+    cursor.execute(query_avg, (hotel_id, hotel_id))
 
 def get_reviews_for_hotel(cursor, hotel_id):
     query = """
@@ -131,6 +135,7 @@ def get_reviews_for_hotel(cursor, hotel_id):
     cursor.execute(query, (hotel_id,))
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
 def search_hotels(cursor, keyword):
     query = """
         SELECT 
@@ -182,145 +187,6 @@ def get_user_bookings(cursor, user_id):
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-# ---------- Routes ----------
-
-@app.route("/")
-def home():
-    hotels = get_random_hotels(cursor)
-    return render_template("home/home.html", hotels=hotels)
-
-@app.route("/hotels")
-def all_hotels():
-    hotels = get_all_hotels(cursor)
-    return render_template("hotel/all_hotels.html", hotels=hotels)
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        try:
-            name = request.form["name"]
-            email = request.form["email"]
-            password = request.form["password"]
-            phone_number = request.form.get("phone_number", None)
-            create_user(cursor, name, email, password, phone_number)
-            conn.commit()
-            return redirect(url_for("login"))
-        except ValueError as e:
-            return render_template("auth/register.html", error=str(e))
-        except Exception as e:
-            logging.error(f"Registration error: {e}")
-            return render_template("auth/register.html", error="An error occurred")
-    return render_template("auth/register.html")
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        user = login_user(cursor, email, password)
-        if user:
-            session["user_id"] = user[0]
-            session["user_name"] = user[1]
-
-    if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        user = login_user(cursor, email, password)
-        if user:
-            session["user_id"] = user[0]
-            session["user_name"] = user[1]
-            return redirect(url_for("home"))
-        else:
-            return render_template("auth/login.html", error="Invalid credentials or account is inactive")
-    return render_template("auth/login.html")
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("home"))
-
-@app.route("/hotel/<int:hotel_id>")
-def hotel_detail(hotel_id):
-    hotel = get_hotel_by_id(cursor, hotel_id)
-    if not hotel:
-        abort(404)
-    reviews = get_reviews_for_hotel(cursor, hotel_id)
-    return render_template("hotel/hotel_detail.html", hotel=hotel, reviews=reviews)
-
-@app.route("/book/<int:hotel_id>", methods=["POST"])
-def book_hotel(hotel_id):
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-    user_id = session["user_id"]
-    date_from = request.form["date_from"]
-    date_to = request.form["date_to"]
-    number_of_guests = int(request.form.get("number_of_guests", 1))
-
-    try:
-        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-        if date_to_dt <= date_from_dt:
-            return render_template("hotel/hotel_detail.html", 
-                                 hotel=get_hotel_by_id(cursor, hotel_id), 
-                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
-                                 error="Check-out date must be after check-in date")
-        book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of_guests)
-        conn.commit()
-        return redirect(url_for("home"))
-    except Exception as e:
-        logging.error(f"Booking error: {e}")
-        return render_template("hotel/hotel_detail.html", 
-                             hotel=get_hotel_by_id(cursor, hotel_id), 
-                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
-                             error="An error occurred during booking")
-
-@app.route("/review/<int:hotel_id>", methods=["POST"])
-def add_review(hotel_id):
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-    user_id = session["user_id"]
-    content = request.form["review"]
-    rating = int(request.form.get("rating", 5))
-    try:
-        add_review_for_hotel(cursor, user_id, hotel_id, content, rating)
-        conn.commit()
-        return redirect(url_for("hotel_detail", hotel_id=hotel_id))
-    except Exception as e:
-        logging.error(f"Review error: {e}")
-        return render_template("hotel/hotel_detail.html", 
-                             hotel=get_hotel_by_id(cursor, hotel_id), 
-                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
-                             error="An error occurred while adding review")
-
-@app.route("/search", methods=["GET"])
-def search():
-    keyword = request.args.get("keyword", "")
-    hotels = search_hotels(cursor, keyword)
-    return jsonify(hotels)
-
-@app.route("/my_bookings")
-def my_bookings():
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-    user_id = session["user_id"]
-    bookings = get_user_bookings(cursor, user_id)
-    return render_template("booking/my_bookings.html", bookings=bookings)
-
-@app.route("/cancel_booking/<int:booking_id>", methods=["POST"])
-def cancel_booking(booking_id):
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-    user_id = session["user_id"]
-    try:
-        query = "UPDATE Bookings SET status = 'Cancelled' WHERE booking_id = ? AND user_id = ? AND status != 'Cancelled'"
-        cursor.execute(query, (booking_id, user_id))
-        conn.commit()
-        return redirect(url_for("my_bookings"))
-    except Exception as e:
-        logging.error(f"Cancel booking error: {e}")
-        return render_template("booking/my_bookings.html", 
-                             bookings=get_user_bookings(cursor, user_id), 
-                             error="An error occurred while canceling booking")
 def get_all_bookings(cursor):
     query = """
         SELECT B.booking_id, B.date_from, B.date_to, B.total_price, B.status, B.number_of_guests,
@@ -395,6 +261,150 @@ def edit_review_for_hotel(cursor, review_id, user_id, review_text, rating):
         WHERE hotel_id = (SELECT hotel_id FROM Reviews WHERE review_id = ?);
     """
     cursor.execute(query_avg, (review_id, review_id))
+
+# ---------- Routes ----------
+
+@app.route("/")
+def home():
+    hotels = get_random_hotels(cursor)
+    return render_template("home/home.html", hotels=hotels)
+
+@app.route("/hotels")
+def all_hotels():
+    hotels = get_all_hotels(cursor)
+    return render_template("hotel/all_hotels.html", hotels=hotels)
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        try:
+            name = request.form["name"]
+            email = request.form["email"]
+            password = request.form["password"]
+            phone_number = request.form.get("phone_number", None)
+            create_user(cursor, name, email, password, phone_number)
+            conn.commit()
+            return redirect(url_for("login"))
+        except ValueError as e:
+            return render_template("auth/register.html", error=str(e))
+        except Exception as e:
+            logging.error(f"Registration error: {e}")
+            return render_template("auth/register.html", error="An error occurred")
+    return render_template("auth/register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        user = login_user(cursor, email, password)
+        if user:
+            session["user_id"] = user[0]
+            session["user_name"] = user[1]
+            return redirect(url_for("home"))
+        else:
+            return render_template("auth/login.html", error="Invalid credentials or account is inactive")
+    return render_template("auth/login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
+
+@app.route("/hotel/<int:hotel_id>")
+def hotel_detail(hotel_id):
+    hotel = get_hotel_by_id(cursor, hotel_id)
+    if not hotel:
+        abort(404)
+    reviews = get_reviews_for_hotel(cursor, hotel_id)
+    return render_template("hotel/hotel_detail.html", hotel=hotel, reviews=reviews)
+
+@app.route("/book/<int:hotel_id>", methods=["POST"])
+def book_hotel(hotel_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    date_from = request.form["date_from"]
+    date_to = request.form["date_to"]
+    number_of_guests = int(request.form.get("number_of_guests", 1))
+    total_price = float(request.form.get("total_price", 0))
+    card_number = request.form["card_number"].replace(" ", "")
+    expiry_date = request.form["expiry_date"]
+    cvv = request.form["cvv"]
+
+    try:
+        # التحقق من تواريخ الحجز
+        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+        if date_to_dt <= date_from_dt:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Check-out date must be after check-in date")
+
+        # التحقق من بيانات الدفع (محاكاة)
+        # مثال: إذا كان رقم البطاقة يبدأ بـ "1234"، نعتبر الدفع ناجحًا
+        if not card_number.startswith("1234"):
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid card number. Please use a card starting with 1234 (simulation).")
+        
+        # التحقق من تاريخ الانتهاء (محاكاة بسيطة)
+        try:
+            expiry_month, expiry_year = map(int, expiry_date.split("/"))
+            current_year = datetime.now().year % 100  # آخر رقمين من السنة الحالية
+            current_month = datetime.now().month
+            if expiry_year < current_year or (expiry_year == current_year and expiry_month < current_month):
+                return render_template("hotel/hotel_detail.html", 
+                                     hotel=get_hotel_by_id(cursor, hotel_id), 
+                                     reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                     error="Payment failed: Card has expired.")
+        except ValueError:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid expiry date format. Use MM/YY.")
+
+        # التحقق من CVV (محاكاة بسيطة)
+        if len(cvv) != 3 or not cvv.isdigit():
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid CVV. Must be 3 digits.")
+
+        # إذا نجحت جميع التحققات، نكمل عملية الحجز
+        book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of_guests, total_price)
+        conn.commit()
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             success="Booking and payment successful! (This is a simulation)")
+    except Exception as e:
+        logging.error(f"Booking error: {e}")
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error="An error occurred during booking")
+
+@app.route("/review/<int:hotel_id>", methods=["POST"])
+def add_review(hotel_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    content = request.form["review"]
+    rating = int(request.form.get("rating", 5))
+    try:
+        add_review_for_hotel(cursor, user_id, hotel_id, content, rating)
+        conn.commit()
+        return redirect(url_for("hotel_detail", hotel_id=hotel_id))
+    except Exception as e:
+        logging.error(f"Review error: {e}")
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error="An error occurred while adding review")
+
 @app.route("/review/<int:hotel_id>/delete/<int:review_id>", methods=["POST"])
 def delete_review(hotel_id, review_id):
     if "user_id" not in session:
@@ -438,6 +448,37 @@ def edit_review(hotel_id, review_id):
                              hotel=get_hotel_by_id(cursor, hotel_id), 
                              reviews=get_reviews_for_hotel(cursor, hotel_id), 
                              error="An error occurred while editing the review")
+
+@app.route("/search", methods=["GET"])
+def search():
+    keyword = request.args.get("keyword", "")
+    hotels = search_hotels(cursor, keyword)
+    return jsonify(hotels)
+
+@app.route("/my_bookings")
+def my_bookings():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    bookings = get_user_bookings(cursor, user_id)
+    return render_template("booking/my_bookings.html", bookings=bookings)
+
+@app.route("/cancel_booking/<int:booking_id>", methods=["POST"])
+def cancel_booking(booking_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    try:
+        query = "UPDATE Bookings SET status = 'Cancelled' WHERE booking_id = ? AND user_id = ? AND status != 'Cancelled'"
+        cursor.execute(query, (booking_id, user_id))
+        conn.commit()
+        return redirect(url_for("my_bookings"))
+    except Exception as e:
+        logging.error(f"Cancel booking error: {e}")
+        return render_template("booking/my_bookings.html", 
+                             bookings=get_user_bookings(cursor, user_id), 
+                             error="An error occurred while canceling booking")
+
 # ---------- App Run ----------
 if __name__ == "__main__":
     app.run(debug=True)
