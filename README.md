@@ -77,7 +77,7 @@ Follow these steps to run the project locally:
 git clone https://github.com/your-username/hotelhub.git
 cd hotelhub
 ```
-###2. Create a Virtual Environment
+### 2. Create a Virtual Environment
 
    - Windows
      - python -m venv venv
@@ -87,12 +87,12 @@ cd hotelhub
       -python3 -m venv venv
       -source venv/bin/activate
 
-###3. Install Dependencies
+### 3. Install Dependencies
 -pip install -r requirements.txt
 
-###4. Set Up the Database
+### 4. Set Up the Database
 -Run the provided SQL scripts inside the SQL queries/ folder to create and configure the database schema.
 
-###5. Run the Application
+### 5. Run the Application
 - python app.py
 
