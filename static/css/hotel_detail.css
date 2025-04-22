@@ -260,6 +260,35 @@ textarea.form-control {
 .edit-review-form .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+
+/* Payment Section */
+.payment-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.payment-section .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+}
+
+.payment-section .form-control {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease;
+}
+
+.payment-section .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.payment-section .form-label {
+    font-weight: 500;
+    color: #333;
+}
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .hero-section {
