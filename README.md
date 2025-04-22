@@ -103,7 +103,7 @@ cd HotelWebsite
      - Open PowerShell as Administrator
      - Run the following command:
        - Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-       -  \venv\Scripts\Activate
+       - then Reactive   -> \venv\Scripts\Activate
        
 
 
