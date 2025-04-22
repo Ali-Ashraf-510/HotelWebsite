@@ -33,7 +33,7 @@
 ---
 
 ## 🗂 Project Structure
-
+```
 hotelhub/
 │
 ├── app.py                 # Main Flask application
@@ -62,7 +62,7 @@ hotelhub/
 ├── .gitignore             # Files to ignore in Git
 └── README.md              # Project documentation
 
-
+```
 
 ---
 
