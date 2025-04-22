@@ -16,33 +16,31 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('home') }}">Hotel Booking</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('home') %}active{% endif %}" href="{{ url_for('home') }}">
+                        <a class="nav-link {{ 'active' if request.path == url_for('home') }}" href="{{ url_for('home') }}">
                             <i class="fas fa-home"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('all_hotels') %}active{% endif %}" href="{{ url_for('all_hotels') }}">
+                        <a class="nav-link {{ 'active' if request.path == url_for('all_hotels') }}" href="{{ url_for('all_hotels') }}">
                             <i class="fas fa-hotel"></i> All Hotels
                         </a>
                     </li>
-                    {% if 'user_id' in session %}
-                        <!-- إذا كان المستخدم مسجلاً -->
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Welcome, {{ session['user_name'] }}
-                            </span>
+                    {% if session.get('user_id') %}
+                        <li class="nav-item d-lg-none">
+                            <span class="nav-link">Welcome, {{ session['user_name'] }}</span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == url_for('my_bookings') %}active{% endif %}" href="{{ url_for('my_bookings') }}">
+                            <a class="nav-link {{ 'active' if request.path == url_for('my_bookings') }}" href="{{ url_for('my_bookings') }}">
                                 <i class="fas fa-book"></i> My Bookings
                             </a>
                         </li>
@@ -51,15 +49,17 @@
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
+                        <li class="nav-item d-none d-lg-block">
+                            <span class="nav-link">Welcome, {{ session['user_name'] }}</span>
+                        </li>
                     {% else %}
-                        <!-- إذا لم يكن هناك مستخدم مسجل -->
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == url_for('login') %}active{% endif %}" href="{{ url_for('login') }}">
+                            <a class="nav-link {{ 'active' if request.path == url_for('login') }}" href="{{ url_for('login') }}">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == url_for('register') %}active{% endif %}" href="{{ url_for('register') }}">
+                            <a class="nav-link {{ 'active' if request.path == url_for('register') }}" href="{{ url_for('register') }}">
                                 <i class="fas fa-user-plus"></i> Register
                             </a>
                         </li>

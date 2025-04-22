@@ -336,6 +336,88 @@ def book_hotel(hotel_id):
         # التحقق من تواريخ الحجز
         date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
         date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+        today = datetime.now().date()
+
+        # التحقق من أن تاريخ Check-in ليس قبل تاريخ اليوم
+        if date_from_dt.date() < today:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Check-in date cannot be before today.")
+
+        # التحقق من أن المدة لا تتجاوز 5 أيام
+        if date_to_dt <= date_from_dt:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Check-out date must be after check-in date.")
+        
+        days = (date_to_dt - date_from_dt).days
+        if days > 5:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Booking duration cannot exceed 5 days.")
+
+        # التحقق من بيانات الدفع (محاكاة)
+        # مثال: إذا كان رقم البطاقة يبدأ بـ "1234"، نعتبر الدفع ناجحًا
+        if not card_number.startswith("1234"):
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid card number. Please use a card starting with 1234 (simulation).")
+        
+        # التحقق من تاريخ الانتهاء (محاكاة بسيطة)
+        try:
+            expiry_month, expiry_year = map(int, expiry_date.split("/"))
+            current_year = datetime.now().year % 100  # آخر رقمين من السنة الحالية
+            current_month = datetime.now().month
+            if expiry_year < current_year or (expiry_year == current_year and expiry_month < current_month):
+                return render_template("hotel/hotel_detail.html", 
+                                     hotel=get_hotel_by_id(cursor, hotel_id), 
+                                     reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                     error="Payment failed: Card has expired.")
+        except ValueError:
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid expiry date format. Use MM/YY.")
+
+        # التحقق من CVV (محاكاة بسيطة)
+        if len(cvv) != 3 or not cvv.isdigit():
+            return render_template("hotel/hotel_detail.html", 
+                                 hotel=get_hotel_by_id(cursor, hotel_id), 
+                                 reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                                 error="Payment failed: Invalid CVV. Must be 3 digits.")
+
+        # إذا نجحت جميع التحققات، نكمل عملية الحجز
+        book_hotel_for_user(cursor, user_id, hotel_id, date_from, date_to, number_of_guests, total_price)
+        conn.commit()
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             success="Booking and payment successful! (This is a simulation)")
+    except Exception as e:
+        logging.error(f"Booking error: {e}")
+        return render_template("hotel/hotel_detail.html", 
+                             hotel=get_hotel_by_id(cursor, hotel_id), 
+                             reviews=get_reviews_for_hotel(cursor, hotel_id), 
+                             error="An error occurred during booking")
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    date_from = request.form["date_from"]
+    date_to = request.form["date_to"]
+    number_of_guests = int(request.form.get("number_of_guests", 1))
+    total_price = float(request.form.get("total_price", 0))
+    card_number = request.form["card_number"].replace(" ", "")
+    expiry_date = request.form["expiry_date"]
+    cvv = request.form["cvv"]
+
+    try:
+        # التحقق من تواريخ الحجز
+        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
         if date_to_dt <= date_from_dt:
             return render_template("hotel/hotel_detail.html", 
                                  hotel=get_hotel_by_id(cursor, hotel_id), 
