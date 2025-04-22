@@ -88,11 +88,22 @@ cd hotelhub
       -source venv/bin/activate
 
 ### 3. Install Dependencies
--pip install -r requirements.txt
+- pip install -r requirements.txt
 
 ### 4. Set Up the Database
--Run the provided SQL scripts inside the SQL queries/ folder to create and configure the database schema.
+- Run the provided SQL scripts inside the SQL queries/ folder to create and configure the database schema.
 
 ### 5. Run the Application
 - python app.py
+
+# 💡 Future Enhancements
+- ✅ Add hotel filters (e.g., by city, stars, price range)
+
+- ✅ Implement real payment integration (e.g., Stripe)
+
+- ✅ Admin dashboard to manage hotels, bookings, and users
+
+- ✅ Email notifications for bookings and cancellations
+
+
 
