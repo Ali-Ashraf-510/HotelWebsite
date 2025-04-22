@@ -84,18 +84,30 @@ Follow these steps to run the project locally:
 
 ```bash
 git clone https://github.com/your-username/hotelhub.git
-cd hotelhub
+cd HotelWebsite
 ```
 ### 2. Create a Virtual Environment
 
    - Windows
      - python -m venv venv
-      -venv\Scripts\activate
-
+     - venv\Scripts\activate
   -  macOS/Linux
-      -python3 -m venv venv
-      -source venv/bin/activate
+      - python3 -m venv venv
+      - source venv/bin/activate
+   - if you see an error like
 
+      - venv\Scripts\activate.ps1 cannot be loaded because running scripts is disabled on this system
+
+   - ✅ Solution:
+
+     - Open PowerShell as Administrator
+     - Run the following command:
+       - Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+       - then Reactive   -> \venv\Scripts\Activate
+       
+
+
+   
 ### 3. Install Dependencies
 - pip install -r requirements.txt
 
