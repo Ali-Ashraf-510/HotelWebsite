@@ -1,7 +1,5 @@
 # 🏨 HotelHub – Hotel Booking System
 
-![HotelHub Logo](static/images/logo.png)  
-<sub><i>*(Optional: Add a logo for branding)*</i></sub>
 
 **HotelHub** is a modern, web-based hotel booking platform built with **Flask**. It allows users to browse hotels, view details, make reservations, leave reviews, and manage their bookings — all through a responsive and user-friendly interface.
 
