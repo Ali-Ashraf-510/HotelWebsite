@@ -34,7 +34,23 @@
 
 ## 🗂 Project Structure
 
-hotelhub/ │ ├── app.py # Main Flask application ├── requirements.txt # List of Python dependencies ├── services.py # Helper functions (e.g., DB connection) │ ├── static/ # Static assets │ ├── css/ │ │ ├── navbar.css │ │ ├── hotel_detail.css │ │ └── my_bookings.css │ ├── js/ │ └── images/ │ ├── templates/ # HTML templates │ ├── navbar/ │ │ └── navbar.html │ ├── hotel/ │ │ └── hotel_detail.html │ ├── my_bookings.html │ ├── home.html │ ├── login.html │ └── register.html │ ├── SQL queries/ # SQL scripts for DB setup (optional) ├── .gitignore # Files to ignore in Git └── README.md # Project documentation
+hotelhub/ │ 
+   ├── app.py # Main Flask application 
+   ├── requirements.txt # List of Python dependencies 
+   ├── services.py # Helper functions (e.g., DB connection) │ 
+   ├── static/ # Static assets │ 
+      ├── css/ │ │
+         ├── navbar.css │ │ 
+         ├── hotel_detail.css │ 
+         │ └── my_bookings.css │
+      ├── js/ │
+      └── images/ │
+   ├── templates/ # HTML templates │ 
+   ├── navbar/ │ 
+      │ └── navbar.html │
+   ├── hotel/ │ │
+      └── hotel_detail.html │ 
+         ├── my_bookings.html │ ├── home.html │ ├── login.html │ └── register.html │ ├── SQL queries/ # SQL scripts for DB setup (optional) ├── .gitignore # Files to ignore in Git └── README.md # Project documentation
 
 
 ---
@@ -63,20 +79,20 @@ cd hotelhub
 ```
 ###2. Create a Virtual Environment
 
-   # Windows
-      python -m venv venv
-      venv\Scripts\activate
+   - Windows
+     - python -m venv venv
+      -venv\Scripts\activate
 
-   # macOS/Linux
-      python3 -m venv venv
-      source venv/bin/activate
+  -  macOS/Linux
+      -python3 -m venv venv
+      -source venv/bin/activate
 
 ###3. Install Dependencies
-   pip install -r requirements.txt
+-pip install -r requirements.txt
 
 ###4. Set Up the Database
-   Run the provided SQL scripts inside the SQL queries/ folder to create and configure the database schema.
+-Run the provided SQL scripts inside the SQL queries/ folder to create and configure the database schema.
 
 ###5. Run the Application
-   python app.py
+- python app.py
 
