@@ -1,5 +1,4 @@
 import logging
-import os
 from os import getenv
 import pyodbc
 from dotenv import load_dotenv
@@ -564,5 +563,4 @@ def cancel_booking(booking_id):
 
 # ---------- App Run ----------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # استخدم PORT من Vercel، أو 5000 محليًا
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
