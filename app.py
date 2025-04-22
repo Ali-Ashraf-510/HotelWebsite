@@ -560,7 +560,11 @@ def cancel_booking(booking_id):
         return render_template("booking/my_bookings.html", 
                              bookings=get_user_bookings(cursor, user_id), 
                              error="An error occurred while canceling booking")
+    
 
+    
+def handler(request):
+    return app(request.environ, start_response=lambda status, headers: None)
 # ---------- App Run ----------
 if __name__ == "__main__":
     app.run(debug=True)
